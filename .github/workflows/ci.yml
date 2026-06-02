@@ -1,0 +1,18 @@
+name: CI
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: checks
+        run: |
+          echo "running checks"
+          # Red/green is controlled by a BREAK marker in src/util.js, so the
+          # CI gate can be exercised deterministically from upstream content.
+          if grep -q BREAK src/util.js; then echo "BREAK marker present -> fail"; exit 1; fi
+          echo "ok"
